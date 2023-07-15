@@ -14,12 +14,14 @@ import {
 } from '../reducers/lists';
 
 export const addListAPI = (name: string) => async (dispatch: Dispatch<any>) => {
+  dispatch(LOADING_STARTED());
   const res = await postTodoList({name});
   if (typeof res === 'string') {
     throw new Error(res);
   } else {
     dispatch(LISTS_ADDED(res));
   }
+  dispatch(LOADING_FINISHED());
 };
 
 export const displayListsAPI = () => async (dispatch: Dispatch<any>) => {
@@ -35,21 +37,23 @@ export const displayListsAPI = () => async (dispatch: Dispatch<any>) => {
 
 export const removeListAPI =
   (id: number) => async (dispatch: Dispatch<any>) => {
+    dispatch(LOADING_STARTED());
     const res = await deleteTodoListById(id);
     console.log(res);
     dispatch(LISTS_REMOVED(id));
+    dispatch(LOADING_FINISHED());
   };
 
 export const editListAPI =
   (id: number, name: string) => async (dispatch: Dispatch<any>) => {
-    if (name !== '') {
-      const res = await putTodoListById(id, {
-        name,
-      });
-      if (typeof res === 'string') {
-        throw new Error(res);
-      } else {
-        dispatch(LISTS_EDITED(res));
-      }
+    dispatch(LOADING_STARTED());
+    const res = await putTodoListById(id, {
+      name,
+    });
+    if (typeof res === 'string') {
+      throw new Error(res);
+    } else {
+      dispatch(LISTS_EDITED(res));
     }
+    dispatch(LOADING_FINISHED());
   };

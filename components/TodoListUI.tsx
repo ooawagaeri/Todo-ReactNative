@@ -2,22 +2,19 @@ import React from 'react';
 import {Text, TouchableOpacity, View} from 'react-native';
 import styled from 'styled-components';
 import AntDesign from 'react-native-vector-icons/AntDesign';
-import {deleteTodoListById} from '../utils/api';
 import {TodoList} from '../types/types';
 import {useNavigation} from '@react-navigation/native';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
+import {useAppDispatch} from '../redux/hooks';
+import {removeListAPI} from '../redux/thunks/listsThunks';
 
-export default function TodoListUI(props: {
-  todoList: TodoList;
-  handleRefresh: () => void;
-}) {
-  let {todoList, handleRefresh} = props;
+export default function TodoListUI(props: {todoList: TodoList}) {
+  let {todoList} = props;
+  const dispatch = useAppDispatch();
   const navigation = useNavigation<NativeStackNavigationProp<any>>();
 
   const handleDelete = async () => {
-    const res = await deleteTodoListById(todoList.id);
-    console.log(res);
-    await handleRefresh();
+    dispatch(removeListAPI(todoList.id));
   };
 
   const navigateToItems = () =>

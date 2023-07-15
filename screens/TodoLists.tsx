@@ -28,12 +28,7 @@ function TodoLists() {
           ListHeaderComponent={<Header text={'To-Do'} />}
           ListEmptyComponent={<Empty text={'To-Do List'} />}
           keyExtractor={item => item.id.toString()}
-          renderItem={({item}) => (
-            <TodoListUI
-              todoList={item}
-              handleRefresh={() => dispatch(displayListsAPI())}
-            />
-          )}
+          renderItem={({item}) => <TodoListUI todoList={item} />}
         />
         <View>
           <AddList />

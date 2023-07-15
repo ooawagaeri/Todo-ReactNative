@@ -11,7 +11,8 @@ const listsSlice = createSlice({
       state.lists = [action.payload, ...state.lists];
     },
     LISTS_REMOVED(state, action) {
-      state.lists = state.lists.filter(({id}) => id !== action.payload.id);
+      console.log('deleting ...' + action.payload);
+      state.lists = state.lists.filter(list => list.id !== action.payload);
     },
     LISTS_DISPLAYED(state, action) {
       state.lists = [...action.payload];
