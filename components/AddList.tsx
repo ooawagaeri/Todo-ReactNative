@@ -20,6 +20,7 @@ export default function AddList(props: {handleRefresh: () => void}) {
       } else {
         await handleRefresh();
       }
+      setValue('');
     }
   };
 
@@ -30,7 +31,6 @@ export default function AddList(props: {handleRefresh: () => void}) {
       </InputContainer>
       <SubmitButton
         onPress={() => {
-          setValue('');
           handleAdd();
         }}>
         <AntDesign name="plus" size={24} color="#282a36" />

@@ -1,47 +1,42 @@
-import React, {useEffect, useLayoutEffect, useState} from 'react';
+import React, {useEffect} from 'react';
 import {SafeAreaView, View, FlatList} from 'react-native';
-import {TodoList} from '../types/types';
-import {getTodoLists} from '../utils/api';
 import AddList from '../components/AddList';
 import styled from 'styled-components';
 import Header from '../components/Header';
 import Empty from '../components/Empty';
 import TodoListUI from '../components/TodoListUI';
+import {displayListsAPI} from '../redux/thunks/listsThunks';
+import {useAppDispatch, useAppSelector} from '../redux/hooks';
 import {useIsFocused} from '@react-navigation/native';
 
 function TodoLists() {
-  const [data, setData] = useState<TodoList[]>([]);
+  const dispatch = useAppDispatch();
+  const lists = useAppSelector(state => state.lists.lists);
 
   const isFocused = useIsFocused();
   useEffect(() => {
     if (isFocused) {
-      updateData();
+      dispatch(displayListsAPI());
     }
-  }, [isFocused]);
-
-  const updateData = async () => {
-    const res = await getTodoLists();
-    if (typeof res === 'string') {
-      console.error(res);
-    } else {
-      setData(res);
-    }
-  };
+  }, [dispatch, isFocused]);
 
   return (
     <ComponentContainer>
       <View>
         <FlatList
-          data={data}
+          data={lists}
           ListHeaderComponent={<Header text={'To-Do'} />}
           ListEmptyComponent={<Empty text={'To-Do List'} />}
           keyExtractor={item => item.id.toString()}
           renderItem={({item}) => (
-            <TodoListUI todoList={item} handleRefresh={() => updateData()} />
+            <TodoListUI
+              todoList={item}
+              handleRefresh={() => dispatch(displayListsAPI())}
+            />
           )}
         />
         <View>
-          <AddList handleRefresh={updateData} />
+          <AddList handleRefresh={() => dispatch(displayListsAPI())} />
         </View>
       </View>
     </ComponentContainer>
