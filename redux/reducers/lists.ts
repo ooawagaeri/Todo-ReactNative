@@ -8,7 +8,7 @@ const listsSlice = createSlice({
   initialState: initialList,
   reducers: {
     LISTS_ADDED(state, action) {
-      state.lists = [...state.lists, action.payload];
+      state.lists = [action.payload, ...state.lists];
     },
     LISTS_REMOVED(state, action) {
       state.lists = state.lists.filter(({id}) => id !== action.payload.id);

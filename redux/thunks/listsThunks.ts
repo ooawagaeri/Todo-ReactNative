@@ -1,5 +1,3 @@
-import * as ListActions from '../actions/listsAction';
-import * as LoadingActions from '../actions/loadingAction';
 import {
   deleteTodoListById,
   getTodoLists,
@@ -7,36 +5,39 @@ import {
   putTodoListById,
 } from '../../utils/api';
 import {Dispatch} from 'redux';
+import {LOADING_FINISHED, LOADING_STARTED} from '../reducers/loading';
+import {
+  LISTS_ADDED,
+  LISTS_DISPLAYED,
+  LISTS_EDITED,
+  LISTS_REMOVED,
+} from '../reducers/lists';
 
-export const addListAPI =
-  (item: {name: string}) => async (dispatch: Dispatch<any>) => {
-    const {name} = item;
-    if (name !== '') {
-      const res = await postTodoList({name});
-      if (typeof res === 'string') {
-        throw new Error(res);
-      } else {
-        dispatch(ListActions.addList(res));
-      }
-    }
-  };
+export const addListAPI = (name: string) => async (dispatch: Dispatch<any>) => {
+  const res = await postTodoList({name});
+  if (typeof res === 'string') {
+    throw new Error(res);
+  } else {
+    dispatch(LISTS_ADDED(res));
+  }
+};
 
 export const displayListsAPI = () => async (dispatch: Dispatch<any>) => {
-  dispatch(LoadingActions.loadingStart());
+  dispatch(LOADING_STARTED());
   const res = await getTodoLists();
   if (typeof res === 'string') {
     throw new Error(res);
   } else {
-    dispatch(ListActions.listDisplay(res));
+    dispatch(LISTS_DISPLAYED(res));
   }
-  dispatch(LoadingActions.loadingEnd());
+  dispatch(LOADING_FINISHED());
 };
 
 export const removeListAPI =
   (id: number) => async (dispatch: Dispatch<any>) => {
     const res = await deleteTodoListById(id);
     console.log(res);
-    dispatch(ListActions.removeList(id));
+    dispatch(LISTS_REMOVED(id));
   };
 
 export const editListAPI =
@@ -48,7 +49,7 @@ export const editListAPI =
       if (typeof res === 'string') {
         throw new Error(res);
       } else {
-        dispatch(ListActions.editList(res));
+        dispatch(LISTS_EDITED(res));
       }
     }
   };

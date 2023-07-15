@@ -36,7 +36,7 @@ function TodoLists() {
           )}
         />
         <View>
-          <AddList handleRefresh={() => dispatch(displayListsAPI())} />
+          <AddList />
         </View>
       </View>
     </ComponentContainer>

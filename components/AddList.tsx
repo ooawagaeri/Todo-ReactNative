@@ -2,25 +2,20 @@ import React, {useState} from 'react';
 import {TextInput, TouchableOpacity, View} from 'react-native';
 import styled from 'styled-components';
 import AntDesign from 'react-native-vector-icons/AntDesign';
-import {postTodoList} from '../utils/api';
+import {useAppDispatch} from '../redux/hooks';
+import {addListAPI} from '../redux/thunks/listsThunks';
 
-export default function AddList(props: {handleRefresh: () => void}) {
-  let {handleRefresh} = props;
-  const [value, setValue] = useState('');
+export default function AddList() {
+  const dispatch = useAppDispatch();
+  const [name, setName] = useState('');
 
   const onChangeText = (text: React.SetStateAction<string>) => {
-    setValue(text);
+    setName(text);
   };
 
   const handleAdd = async () => {
-    if (value !== '') {
-      const res = await postTodoList({name: value});
-      if (typeof res === 'string') {
-        console.error(res);
-      } else {
-        await handleRefresh();
-      }
-      setValue('');
+    if (name !== '') {
+      dispatch(addListAPI(name));
     }
   };
 
@@ -31,6 +26,7 @@ export default function AddList(props: {handleRefresh: () => void}) {
       </InputContainer>
       <SubmitButton
         onPress={() => {
+          setName('');
           handleAdd();
         }}>
         <AntDesign name="plus" size={24} color="#282a36" />
