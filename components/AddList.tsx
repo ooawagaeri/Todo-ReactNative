@@ -3,7 +3,7 @@ import {TextInput, TouchableOpacity, View} from 'react-native';
 import styled from 'styled-components';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import {useAppDispatch} from '../redux/hooks';
-import {addListAPI} from '../redux/thunks/listsThunks';
+import {addListOfflineAPI} from '../redux/network/listsOffline';
 
 export default function AddList() {
   const dispatch = useAppDispatch();
@@ -15,7 +15,7 @@ export default function AddList() {
 
   const handleAdd = async () => {
     if (name !== '') {
-      dispatch(addListAPI(name));
+      dispatch(addListOfflineAPI(name));
     }
   };
 

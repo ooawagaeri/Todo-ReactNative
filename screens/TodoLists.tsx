@@ -5,9 +5,9 @@ import styled from 'styled-components';
 import Header from '../components/Header';
 import Empty from '../components/Empty';
 import TodoListUI from '../components/TodoListUI';
-import {displayListsAPI} from '../redux/thunks/listsThunks';
 import {useAppDispatch, useAppSelector} from '../redux/hooks';
 import {useIsFocused} from '@react-navigation/native';
+import {displayListsOfflineAPI} from '../redux/network/listsOffline';
 
 function TodoLists() {
   const dispatch = useAppDispatch();
@@ -16,7 +16,7 @@ function TodoLists() {
   const isFocused = useIsFocused();
   useEffect(() => {
     if (isFocused) {
-      dispatch(displayListsAPI());
+      dispatch(displayListsOfflineAPI());
     }
   }, [dispatch, isFocused]);
 

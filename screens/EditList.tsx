@@ -3,7 +3,7 @@ import {SafeAreaView, TextInput, TouchableOpacity, View} from 'react-native';
 import styled from 'styled-components';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import {useAppDispatch} from '../redux/hooks';
-import {editListAPI} from '../redux/thunks/listsThunks';
+import {editListOfflineAPI} from '../redux/network/listsOffline';
 
 export default function EditList(props: {navigation: any; route: any}) {
   let {navigation, route} = props;
@@ -12,7 +12,7 @@ export default function EditList(props: {navigation: any; route: any}) {
 
   const handleSubmit = async () => {
     if (name !== '') {
-      dispatch(editListAPI(route.params.id, name));
+      dispatch(editListOfflineAPI(route.params.id, name));
       navigation.navigate('TodoLists'); // Return to list of TodoLists
     }
   };

@@ -14,15 +14,17 @@ import {
   LISTS_REMOVED,
 } from '../reducers/lists';
 
-export const addListAPI = (name: string) => async (dispatch: Dispatch<any>) => {
-  dispatch(LOADING_STARTED());
-  const res = await postTodoList({name});
-  if (typeof res === 'string') {
-    throw new Error(res);
-  } else {
-    dispatch(LISTS_ADDED(res));
-  }
-  dispatch(LOADING_FINISHED());
+export const addListAPI = (name: string) => {
+  return async (dispatch: Dispatch<any>) => {
+    dispatch(LOADING_STARTED());
+    const res = await postTodoList({name});
+    if (typeof res === 'string') {
+      throw new Error(res);
+    } else {
+      dispatch(LISTS_ADDED(res));
+    }
+    dispatch(LOADING_FINISHED());
+  };
 };
 
 export const displayListsAPI = () => async (dispatch: Dispatch<any>) => {

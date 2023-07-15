@@ -6,7 +6,7 @@ import {TodoList} from '../types/types';
 import {useNavigation} from '@react-navigation/native';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {useAppDispatch} from '../redux/hooks';
-import {removeListAPI} from '../redux/thunks/listsThunks';
+import {removeListOfflineAPI} from '../redux/network/listsOffline';
 
 export default function TodoListUI(props: {todoList: TodoList}) {
   let {todoList} = props;
@@ -14,7 +14,7 @@ export default function TodoListUI(props: {todoList: TodoList}) {
   const navigation = useNavigation<NativeStackNavigationProp<any>>();
 
   const handleDelete = async () => {
-    dispatch(removeListAPI(todoList.id));
+    dispatch(removeListOfflineAPI(todoList.id));
   };
 
   const navigateToItems = () =>
