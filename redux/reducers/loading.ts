@@ -18,22 +18,3 @@ const loadingSlice = createSlice({
 export const {LOADING_STARTED, LOADING_FINISHED} = loadingSlice.actions;
 
 export default loadingSlice.reducer;
-
-//
-// export function loadingReducer(
-//   state = initialLoading,
-//   props: {
-//     type: string;
-//     payload: boolean;
-//   },
-// ) {
-//   let {type, payload} = props;
-//   switch (type) {
-//     case Actions.LOADING_STARTED:
-//       return {...state, loading: payload};
-//     case Actions.LOADING_FINISHED:
-//       return {...state, loading: payload};
-//     default:
-//       return state;
-//   }
-// }

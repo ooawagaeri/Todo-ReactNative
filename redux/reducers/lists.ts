@@ -1,4 +1,4 @@
-import {TodoList} from '../../types/types';
+import {TodoItem, TodoList} from '../../types/types';
 import {createSlice} from '@reduxjs/toolkit';
 
 const initialList: {lists: TodoList[]} = {lists: []};
@@ -11,50 +11,74 @@ const listsSlice = createSlice({
       state.lists = [action.payload, ...state.lists];
     },
     LISTS_REMOVED(state, action) {
-      console.log('deleting ...' + action.payload);
       state.lists = state.lists.filter(list => list.id !== action.payload);
     },
     LISTS_DISPLAYED(state, action) {
       state.lists = [...action.payload];
     },
     LISTS_EDITED(state, action) {
-      state.lists = updateState(state.lists, action.payload);
+      state.lists = editListState(state.lists, action.payload);
+    },
+    // Todo Items
+    ITEMS_ADDED(state, action) {
+      state.lists = addItemState(state.lists, action.payload);
+    },
+    ITEMS_REMOVED(state, action) {
+      state.lists = removeItemState(state.lists, action.payload);
+    },
+    ITEMS_EDITED(state, action) {
+      state.lists = editItemState(state.lists, action.payload);
     },
   },
 });
 
-function updateState(data: TodoList[], target: TodoList): TodoList[] {
-  return data.map(obj => {
-    if (obj.id === target.id) {
+function editListState(data: TodoList[], target: TodoList): TodoList[] {
+  return data.map(list => {
+    if (list.id === target.id) {
       return target;
     }
-    return obj;
+    return list;
   });
+}
+
+// Todo Items
+function retrieveList(data: TodoList[], listId: number | undefined) {
+  const targetList = data.filter(list => list.id === listId);
+  if (!targetList.length) {
+    throw new Error('No such list');
+  }
+  return targetList[0];
+}
+
+function addItemState(data: TodoList[], item: TodoItem): TodoList[] {
+  const targetList = retrieveList(data, item.todo_list_id);
+  targetList.todos = [item, ...targetList.todos];
+  return editListState(data, targetList);
+}
+
+function removeItemState(
+  data: TodoList[],
+  target: {listId: number; id: number},
+): TodoList[] {
+  const targetList = retrieveList(data, target.listId);
+  targetList.todos = targetList.todos.filter(item => item.id !== target.id);
+  return editListState(data, targetList);
+}
+
+function editItemState(data: TodoList[], target: TodoItem): TodoList[] {
+  const targetList = retrieveList(data, target.todo_list_id);
+  targetList.todos = targetList.todos.map(item => {
+    if (item.id === target.id) {
+      return target;
+    }
+    return item;
+  });
+  return editListState(data, targetList);
 }
 
 export const {LISTS_ADDED, LISTS_REMOVED, LISTS_DISPLAYED, LISTS_EDITED} =
   listsSlice.actions;
 
-export default listsSlice.reducer;
+export const {ITEMS_ADDED, ITEMS_REMOVED, ITEMS_EDITED} = listsSlice.actions;
 
-// export function listsReducer(
-//   state = initialState,
-//   props: {
-//     type: string;
-//     payload: any;
-//   },
-// ) {
-//   let {type, payload} = props;
-//   switch (type) {
-//     case Actions.LIST_ADDED:
-//       return {lists: [...state.lists, payload]};
-//     case Actions.LIST_REMOVED:
-//       return {lists: state.lists.filter(({id}) => id !== payload.id)};
-//     case Actions.LISTS_DISPLAYED:
-//       return {lists: [...payload]};
-//     case Actions.LISTS_EDITED:
-//       return {lists: updateState(state.lists, payload)};
-//     default:
-//       return state;
-//   }
-// }
+export default listsSlice.reducer;

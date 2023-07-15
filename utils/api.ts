@@ -65,7 +65,7 @@ export async function getTodoItemById(id: number): Promise<TodoItem | string> {
 
 export async function postTodoItem(todoItem: {
   description: string;
-  todo_list_id: any;
+  todo_list_id: number;
 }): Promise<TodoItem | string> {
   const rawRes = await axios.post(base_url + '/todos', todoItem);
   const res = rawRes.data as MessagePayload;

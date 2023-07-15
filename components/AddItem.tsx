@@ -2,29 +2,26 @@ import React, {useState} from 'react';
 import {TextInput, TouchableOpacity, View} from 'react-native';
 import styled from 'styled-components';
 import AntDesign from 'react-native-vector-icons/AntDesign';
-import {postTodoItem} from '../utils/api';
+import {useAppDispatch} from '../redux/hooks';
+import {addItemAPI} from '../redux/thunks/itemsThunks';
 
-export default function AddItem(props: {
-  id: number;
-  handleRefresh: () => void;
-}) {
-  let {id, handleRefresh} = props;
-  const [value, setValue] = useState('');
+export default function AddItem(props: {id: number}) {
+  let {id} = props;
+  const dispatch = useAppDispatch();
+  const [desc, setDesc] = useState('');
 
   const onChangeText = (text: React.SetStateAction<string>) => {
-    setValue(text);
+    setDesc(text);
   };
 
   const handleAdd = async () => {
-    if (value !== '') {
-      setValue('');
+    if (desc !== '') {
+      setDesc('');
       const newTodo = {
         todo_list_id: id,
-        description: value,
+        description: desc,
       };
-      const resPost = await postTodoItem(newTodo);
-      console.log(resPost);
-      await handleRefresh();
+      dispatch(addItemAPI(newTodo));
     }
   };
 

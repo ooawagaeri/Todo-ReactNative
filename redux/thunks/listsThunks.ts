@@ -1,5 +1,6 @@
 import {
   deleteTodoListById,
+  getTodoListById,
   getTodoLists,
   postTodoList,
   putTodoListById,
@@ -35,11 +36,22 @@ export const displayListsAPI = () => async (dispatch: Dispatch<any>) => {
   dispatch(LOADING_FINISHED());
 };
 
+export const displayListByIdAPI =
+  (listId: number) => async (dispatch: Dispatch<any>) => {
+    dispatch(LOADING_STARTED());
+    const res = await getTodoListById(listId);
+    if (typeof res === 'string') {
+      throw new Error(res);
+    } else {
+      dispatch(LISTS_EDITED(res));
+    }
+    dispatch(LOADING_FINISHED());
+  };
+
 export const removeListAPI =
   (id: number) => async (dispatch: Dispatch<any>) => {
     dispatch(LOADING_STARTED());
-    const res = await deleteTodoListById(id);
-    console.log(res);
+    await deleteTodoListById(id);
     dispatch(LISTS_REMOVED(id));
     dispatch(LOADING_FINISHED());
   };
