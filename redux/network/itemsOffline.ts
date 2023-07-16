@@ -1,18 +1,15 @@
 import {addItemAPI, editItemAPI, removeItemAPI} from '../thunks/itemsThunks';
-import {isOffline, queueDispatch} from './offline';
+import {isOffline, setOfflineHistory} from './offline';
 import {TodoItem, TodoList} from '../../types/types';
 import {Dispatch} from 'redux';
 import store, {AppState} from '../configureStore';
 import {ITEMS_ADDED, ITEMS_EDITED, ITEMS_REMOVED} from '../reducers/lists';
 
+// Helper func
 export function getTargetStateList(state: AppState, todo_list_id: number) {
   return state.lists.lists.filter(
     (list: TodoList) => list.id === todo_list_id,
-  )[0].todos;
-}
-
-function randomId() {
-  return Math.floor(Math.random() * 50); // generate arbitrary number
+  )[0];
 }
 
 export const addItemOfflineAPI =
@@ -22,7 +19,7 @@ export const addItemOfflineAPI =
       const state = store.getState();
       const targetList = getTargetStateList(state, todoItem.todo_list_id);
       const newItem: TodoItem = {
-        id: targetList[0].id ?? randomId(),
+        id: targetList.todos.length + 1,
         description: todoItem.description,
         is_done: false,
         todo_list_id: todoItem.todo_list_id,
@@ -30,7 +27,7 @@ export const addItemOfflineAPI =
         updated_at: new Date(),
       };
       dispatch(ITEMS_ADDED(newItem));
-      queueDispatch(() => dispatch(addItemAPI(todoItem)));
+      setOfflineHistory(true);
     } else {
       dispatch(addItemAPI(todoItem));
     }
@@ -40,7 +37,7 @@ export const removeItemOfflineAPI =
   (listId: number, id: number) => async (dispatch: Dispatch<any>) => {
     if (await isOffline()) {
       dispatch(ITEMS_REMOVED({listId, id}));
-      queueDispatch(() => dispatch(removeItemAPI(listId, id)));
+      setOfflineHistory(true);
     } else {
       dispatch(removeItemAPI(listId, id));
     }
@@ -59,7 +56,7 @@ export const editItemOfflineAPI =
     if (await isOffline()) {
       const state = store.getState();
       const targetList = getTargetStateList(state, listId);
-      const targetItem = targetList.filter(item => item.id === id)[0];
+      const targetItem = targetList.todos.filter(item => item.id === id)[0];
       const editedItem: TodoItem = {
         id: id,
         description: todoItem.description ?? targetItem.description,
@@ -69,7 +66,7 @@ export const editItemOfflineAPI =
         updated_at: new Date(),
       };
       dispatch(ITEMS_EDITED(editedItem));
-      queueDispatch(() => dispatch(editItemAPI(listId, id, todoItem)));
+      setOfflineHistory(true);
     } else {
       dispatch(editItemAPI(listId, id, todoItem));
     }

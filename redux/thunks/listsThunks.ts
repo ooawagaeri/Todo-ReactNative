@@ -3,6 +3,7 @@ import {
   getTodoListById,
   getTodoLists,
   postTodoList,
+  putSyncData,
   putTodoListById,
 } from '../../utils/api';
 import {Dispatch} from 'redux';
@@ -13,6 +14,7 @@ import {
   LISTS_EDITED,
   LISTS_REMOVED,
 } from '../reducers/lists';
+import store from '../configureStore';
 
 export const addListAPI = (name: string) => {
   return async (dispatch: Dispatch<any>) => {
@@ -71,3 +73,15 @@ export const editListAPI =
     }
     dispatch(LOADING_FINISHED());
   };
+
+export const syncListAPI = () => async (dispatch: Dispatch<any>) => {
+  dispatch(LOADING_STARTED());
+  const allLists = store.getState().lists.lists;
+  const res = await putSyncData(allLists);
+  if (typeof res === 'string') {
+    throw new Error(res);
+  } else {
+    dispatch(LISTS_DISPLAYED(res));
+  }
+  dispatch(LOADING_FINISHED());
+};

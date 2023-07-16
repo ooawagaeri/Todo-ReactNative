@@ -5,7 +5,7 @@ import {
   editListAPI,
   removeListAPI,
 } from '../thunks/listsThunks';
-import {isOffline, queueDispatch} from './offline';
+import {isOffline, setOfflineHistory} from './offline';
 import {TodoList} from '../../types/types';
 import {Dispatch} from 'redux';
 import store from '../configureStore';
@@ -22,14 +22,14 @@ export const addListOfflineAPI = (name: string) => {
     if (await isOffline()) {
       const state = store.getState();
       const newList: TodoList = {
-        id: state.lists.lists[0].id + 1,
+        id: state.lists.lists.length + 1,
         todos: [],
         name,
         created_at: new Date(),
         updated_at: new Date(),
       };
       dispatch(LISTS_ADDED(newList));
-      queueDispatch(() => dispatch(addListAPI(name)));
+      setOfflineHistory(true);
     } else {
       dispatch(addListAPI(name));
     }
@@ -60,7 +60,7 @@ export const removeListOfflineAPI =
   (id: number) => async (dispatch: Dispatch<any>) => {
     if (await isOffline()) {
       dispatch(LISTS_REMOVED(id));
-      queueDispatch(() => dispatch(removeListAPI(id)));
+      setOfflineHistory(true);
     } else {
       dispatch(removeListAPI(id));
     }
@@ -70,7 +70,7 @@ export const editListOfflineAPI =
   (id: number, editName: string) => async (dispatch: Dispatch<any>) => {
     if (await isOffline()) {
       const state = store.getState();
-      const targetList = state.lists.lists.filter(list => list.id === id)[0];
+      const targetList = getTargetStateList(state, id);
       const editedList: TodoList = {
         id: targetList.id,
         todos: targetList.todos,
@@ -79,7 +79,7 @@ export const editListOfflineAPI =
         updated_at: new Date(),
       };
       dispatch(LISTS_EDITED(editedList));
-      queueDispatch(() => dispatch(editListAPI(id, editName)));
+      setOfflineHistory(true);
     } else {
       dispatch(editListAPI(id, editName));
     }

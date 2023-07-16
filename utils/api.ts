@@ -89,3 +89,14 @@ export async function deleteTodoItemById(id: number): Promise<string> {
   const res = rawRes.data as MessagePayload;
   return res.msg;
 }
+
+export async function putSyncData(
+  allLists: TodoList[],
+): Promise<TodoList[] | string> {
+  const payload = {
+    data: allLists,
+  };
+  const rawRes = await axios.put(base_url + '/sync', payload);
+  const res = rawRes.data as MessagePayload;
+  return res.data ? (res.data as TodoList[]) : (res.msg as string);
+}

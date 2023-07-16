@@ -1,11 +1,11 @@
 import React, {useEffect, useState} from 'react';
 import {useAppDispatch} from '../redux/hooks';
 import {useNetInfo} from '@react-native-community/netinfo';
-import {existOfflineDispatches, syncDispatches} from '../redux/network/offline';
-import {displayListsAPI} from '../redux/thunks/listsThunks';
 import {View} from 'react-native';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import styled from 'styled-components';
+import {syncListAPI} from '../redux/thunks/listsThunks';
+import {existOfflineHistory, setOfflineHistory} from '../redux/network/offline';
 
 export default function Syncer() {
   const netInfo = useNetInfo();
@@ -19,10 +19,9 @@ export default function Syncer() {
       return;
     }
     setIsOnline(isConnected);
-    // Push data to server
-    if (isConnected && existOfflineDispatches()) {
-      dispatch(displayListsAPI()); // Reset state to server last-known
-      syncDispatches(); // Update last-known with offline data
+    if (isConnected && existOfflineHistory()) {
+      setOfflineHistory(false);
+      dispatch(syncListAPI()).then();
     }
   }, [dispatch, netInfo]);
 
