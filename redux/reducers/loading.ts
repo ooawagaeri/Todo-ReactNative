@@ -1,6 +1,6 @@
 import {createSlice} from '@reduxjs/toolkit';
 
-const initialLoading = {loading: false, syncing: false};
+const initialLoading = {loading: false};
 
 const loadingSlice = createSlice({
   name: 'loading',
@@ -12,20 +12,9 @@ const loadingSlice = createSlice({
     LOADING_FINISHED(state) {
       state.loading = false;
     },
-    SYNCING_STARTED(state) {
-      state.syncing = true;
-    },
-    SYNCING_FINISHED(state) {
-      state.syncing = false;
-    },
   },
 });
 
-export const {
-  LOADING_STARTED,
-  LOADING_FINISHED,
-  SYNCING_STARTED,
-  SYNCING_FINISHED,
-} = loadingSlice.actions;
+export const {LOADING_STARTED, LOADING_FINISHED} = loadingSlice.actions;
 
 export default loadingSlice.reducer;

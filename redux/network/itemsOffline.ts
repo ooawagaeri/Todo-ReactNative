@@ -5,13 +5,23 @@ import {Dispatch} from 'redux';
 import store, {AppState} from '../configureStore';
 import {ITEMS_ADDED, ITEMS_EDITED, ITEMS_REMOVED} from '../reducers/lists';
 
-// Helper func
+/**
+ * Gets specific list from current state.
+ *
+ * @param state
+ * @param todo_list_id
+ */
 export function getTargetStateList(state: AppState, todo_list_id: number) {
   return state.lists.lists.filter(
     (list: TodoList) => list.id === todo_list_id,
   )[0];
 }
 
+/**
+ * Adds item to current state if offline or directly calls add item server API.
+ *
+ * @param todoItem
+ */
 export const addItemOfflineAPI =
   (todoItem: {description: string; todo_list_id: number}) =>
   async (dispatch: Dispatch<any>) => {
@@ -33,6 +43,12 @@ export const addItemOfflineAPI =
     }
   };
 
+/**
+ * Removes item from current state if offline or directly calls remove item server API.
+ *
+ * @param listId
+ * @param id
+ */
 export const removeItemOfflineAPI =
   (listId: number, id: number) => async (dispatch: Dispatch<any>) => {
     if (await isOffline()) {
@@ -43,6 +59,13 @@ export const removeItemOfflineAPI =
     }
   };
 
+/**
+ * Edits item in current state if offline or directly calls edit item server API.
+ *
+ * @param listId
+ * @param id
+ * @param todoItem
+ */
 export const editItemOfflineAPI =
   (
     listId: number,

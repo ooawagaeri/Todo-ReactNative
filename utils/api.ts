@@ -9,7 +9,7 @@ interface MessagePayload {
 }
 
 /**
- * Todo List APIs
+ * --------------- Todo List APIs ---------------
  */
 export async function getTodoLists(): Promise<TodoList[] | string> {
   const rawRes = await axios.get(base_url + '/todo-lists');
@@ -49,7 +49,7 @@ export async function deleteTodoListById(id: number): Promise<string> {
 }
 
 /**
- * Todo Item APIs
+ * --------------- Todo Item APIs ---------------
  */
 export async function getTodoItems(): Promise<TodoItem[] | string> {
   const rawRes = await axios.get(base_url + '/todos');

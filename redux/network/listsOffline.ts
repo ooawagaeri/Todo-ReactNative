@@ -17,6 +17,11 @@ import {
 } from '../reducers/lists';
 import {getTargetStateList} from './itemsOffline';
 
+/**
+ * Adds list to current state if offline or directly calls add list server API.
+ *
+ * @param name
+ */
 export const addListOfflineAPI = (name: string) => {
   return async (dispatch: Dispatch<any>) => {
     if (await isOffline()) {
@@ -36,6 +41,9 @@ export const addListOfflineAPI = (name: string) => {
   };
 };
 
+/**
+ * Updates/refreshes lists in current state if offline or directly calls display lists server API.
+ */
 export const displayListsOfflineAPI = () => async (dispatch: Dispatch<any>) => {
   if (await isOffline()) {
     const state = store.getState();
@@ -45,6 +53,11 @@ export const displayListsOfflineAPI = () => async (dispatch: Dispatch<any>) => {
   }
 };
 
+/**
+ * Updates/refreshes list in current state if offline or directly calls display list server API.
+ *
+ * @param listId
+ */
 export const displayListByIdOfflineAPI =
   (listId: number) => async (dispatch: Dispatch<any>) => {
     if (await isOffline()) {
@@ -56,6 +69,11 @@ export const displayListByIdOfflineAPI =
     }
   };
 
+/**
+ * Removes list from current state if offline or directly calls remove list server API.
+ *
+ * @param id
+ */
 export const removeListOfflineAPI =
   (id: number) => async (dispatch: Dispatch<any>) => {
     if (await isOffline()) {
@@ -66,6 +84,12 @@ export const removeListOfflineAPI =
     }
   };
 
+/**
+ * Edits list in current state if offline or directly calls edit list server API.
+ *
+ * @param id
+ * @param editName
+ */
 export const editListOfflineAPI =
   (id: number, editName: string) => async (dispatch: Dispatch<any>) => {
     if (await isOffline()) {

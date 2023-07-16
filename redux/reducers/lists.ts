@@ -32,6 +32,9 @@ const listsSlice = createSlice({
   },
 });
 
+/**
+ * --------------- Todo List State Functions ---------------
+ */
 function editListState(data: TodoList[], target: TodoList): TodoList[] {
   return data.map(list => {
     if (list.id === target.id) {
@@ -41,7 +44,9 @@ function editListState(data: TodoList[], target: TodoList): TodoList[] {
   });
 }
 
-// Todo Items
+/**
+ * --------------- Todo Item State Functions ---------------
+ */
 function retrieveList(data: TodoList[], listId: number | undefined) {
   const targetList = data.filter(list => list.id === listId);
   if (!targetList.length) {

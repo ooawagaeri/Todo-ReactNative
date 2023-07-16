@@ -5,7 +5,7 @@ import {TodoList} from '../types/types';
 
 export interface AppState {
   lists: {lists: TodoList[]};
-  loading: {loading: boolean; syncing: boolean};
+  loading: {loading: boolean};
 }
 
 const store = configureStore({

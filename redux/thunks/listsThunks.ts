@@ -16,6 +16,11 @@ import {
 } from '../reducers/lists';
 import store from '../configureStore';
 
+/**
+ * Adds list based on server API and adds to current state.
+ *
+ * @param name
+ */
 export const addListAPI = (name: string) => {
   return async (dispatch: Dispatch<any>) => {
     dispatch(LOADING_STARTED());
@@ -29,6 +34,9 @@ export const addListAPI = (name: string) => {
   };
 };
 
+/**
+ * Update/refresh lists based on server API and updates current state.
+ */
 export const displayListsAPI = () => async (dispatch: Dispatch<any>) => {
   dispatch(LOADING_STARTED());
   const res = await getTodoLists();
@@ -40,6 +48,11 @@ export const displayListsAPI = () => async (dispatch: Dispatch<any>) => {
   dispatch(LOADING_FINISHED());
 };
 
+/**
+ * Update/refresh list based on server API and updates current state.
+ *
+ * @param listId
+ */
 export const displayListByIdAPI =
   (listId: number) => async (dispatch: Dispatch<any>) => {
     dispatch(LOADING_STARTED());
@@ -52,6 +65,11 @@ export const displayListByIdAPI =
     dispatch(LOADING_FINISHED());
   };
 
+/**
+ * Remove list based on server API and removes from current state.
+ *
+ * @param id
+ */
 export const removeListAPI =
   (id: number) => async (dispatch: Dispatch<any>) => {
     dispatch(LOADING_STARTED());
@@ -60,6 +78,12 @@ export const removeListAPI =
     dispatch(LOADING_FINISHED());
   };
 
+/**
+ * Edits list based on server API and edits in current state.
+ *
+ * @param id
+ * @param name
+ */
 export const editListAPI =
   (id: number, name: string) => async (dispatch: Dispatch<any>) => {
     dispatch(LOADING_STARTED());
@@ -74,6 +98,9 @@ export const editListAPI =
     dispatch(LOADING_FINISHED());
   };
 
+/**
+ * Syncs current state with server state. Updates currents state.
+ */
 export const syncListAPI = () => async (dispatch: Dispatch<any>) => {
   dispatch(LOADING_STARTED());
   const allLists = store.getState().lists.lists;
