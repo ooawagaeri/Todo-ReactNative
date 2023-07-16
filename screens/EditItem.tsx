@@ -41,8 +41,8 @@ export default function EditItem(props: {navigation: any; route: any}) {
       <InnerContainer>
         <InputContainer>
           <Input
-            placeholder="New Description..."
             value={desc}
+            placeholder="New Description..."
             onChangeText={onChangeText}
           />
         </InputContainer>

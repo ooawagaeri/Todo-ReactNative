@@ -32,8 +32,8 @@ export default function EditList(props: {navigation: any; route: any}) {
       <InnerContainer>
         <InputContainer>
           <Input
-            placeholder="New Name..."
             value={name}
+            placeholder="New Name..."
             onChangeText={onChangeText}
           />
         </InputContainer>
