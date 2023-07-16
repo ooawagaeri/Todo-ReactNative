@@ -9,7 +9,6 @@ import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {Provider} from 'react-redux';
 import store from './redux/configureStore';
 import LoadingSpinner from './components/LoadingSpinner';
-// import Syncer from './components/Syncer';
 
 const Stack = createNativeStackNavigator();
 
@@ -20,7 +19,6 @@ export default function App() {
         <View>
           <StatusBar barStyle="light-content" backgroundColor="#282a36" />
         </View>
-        {/*<Syncer />*/}
         <LoadingSpinner />
         <Stack.Navigator
           screenOptions={{

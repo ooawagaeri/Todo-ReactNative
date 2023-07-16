@@ -11,6 +11,10 @@ export function getTargetStateList(state: AppState, todo_list_id: number) {
   )[0].todos;
 }
 
+function randomId() {
+  return Math.floor(Math.random() * 50); // generate arbitrary number
+}
+
 export const addItemOfflineAPI =
   (todoItem: {description: string; todo_list_id: number}) =>
   async (dispatch: Dispatch<any>) => {
@@ -18,7 +22,7 @@ export const addItemOfflineAPI =
       const state = store.getState();
       const targetList = getTargetStateList(state, todoItem.todo_list_id);
       const newItem: TodoItem = {
-        id: targetList[0].id,
+        id: targetList[0].id ?? randomId(),
         description: todoItem.description,
         is_done: false,
         todo_list_id: todoItem.todo_list_id,
