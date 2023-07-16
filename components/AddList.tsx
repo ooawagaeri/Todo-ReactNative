@@ -15,7 +15,7 @@ export default function AddList() {
 
   const handleAdd = async () => {
     if (name !== '') {
-      dispatch(addListOfflineAPI(name));
+      await dispatch(addListOfflineAPI(name));
     }
   };
 

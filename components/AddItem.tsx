@@ -3,7 +3,7 @@ import {TextInput, TouchableOpacity, View} from 'react-native';
 import styled from 'styled-components';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import {useAppDispatch} from '../redux/hooks';
-import {addItemAPI} from '../redux/thunks/itemsThunks';
+import {addItemOfflineAPI} from '../redux/network/itemsOffline';
 
 export default function AddItem(props: {id: number}) {
   let {id} = props;
@@ -21,7 +21,7 @@ export default function AddItem(props: {id: number}) {
         todo_list_id: id,
         description: desc,
       };
-      dispatch(addItemAPI(newTodo));
+      await dispatch(addItemOfflineAPI(newTodo));
     }
   };
 

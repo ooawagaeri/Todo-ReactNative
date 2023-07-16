@@ -3,7 +3,7 @@ import {SafeAreaView, TextInput, TouchableOpacity, View} from 'react-native';
 import styled from 'styled-components';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import {useAppDispatch} from '../redux/hooks';
-import {editItemAPI} from '../redux/thunks/itemsThunks';
+import {editItemOfflineAPI} from '../redux/network/itemsOffline';
 
 export default function EditItem(props: {navigation: any; route: any}) {
   let {navigation, route} = props;
@@ -12,8 +12,8 @@ export default function EditItem(props: {navigation: any; route: any}) {
 
   const handleSubmit = async () => {
     if (desc !== '') {
-      dispatch(
-        editItemAPI(route.params.listId, route.params.id, {
+      await dispatch(
+        editItemOfflineAPI(route.params.listId, route.params.id, {
           description: desc,
           is_done: undefined,
         }),

@@ -14,7 +14,7 @@ export default function TodoListUI(props: {todoList: TodoList}) {
   const navigation = useNavigation<NativeStackNavigationProp<any>>();
 
   const handleDelete = async () => {
-    dispatch(removeListOfflineAPI(todoList.id));
+    await dispatch(removeListOfflineAPI(todoList.id));
   };
 
   const navigateToItems = () =>

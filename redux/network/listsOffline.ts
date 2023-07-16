@@ -1,5 +1,6 @@
 import {
   addListAPI,
+  displayListByIdAPI,
   displayListsAPI,
   editListAPI,
   removeListAPI,
@@ -14,6 +15,7 @@ import {
   LISTS_EDITED,
   LISTS_REMOVED,
 } from '../reducers/lists';
+import {getTargetStateList} from './itemsOffline';
 
 export const addListOfflineAPI = (name: string) => {
   return async (dispatch: Dispatch<any>) => {
@@ -42,6 +44,17 @@ export const displayListsOfflineAPI = () => async (dispatch: Dispatch<any>) => {
     dispatch(displayListsAPI());
   }
 };
+
+export const displayListByIdOfflineAPI =
+  (listId: number) => async (dispatch: Dispatch<any>) => {
+    if (await isOffline()) {
+      const state = store.getState();
+      const targetList = getTargetStateList(state, listId);
+      dispatch(LISTS_EDITED(targetList));
+    } else {
+      dispatch(displayListByIdAPI(listId));
+    }
+  };
 
 export const removeListOfflineAPI =
   (id: number) => async (dispatch: Dispatch<any>) => {

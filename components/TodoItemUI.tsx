@@ -7,7 +7,10 @@ import BouncyCheckbox from 'react-native-bouncy-checkbox';
 import {useNavigation} from '@react-navigation/native';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {useAppDispatch} from '../redux/hooks';
-import {editItemAPI, removeItemAPI} from '../redux/thunks/itemsThunks';
+import {
+  editItemOfflineAPI,
+  removeItemOfflineAPI,
+} from '../redux/network/itemsOffline';
 
 export default function TodoItemUI(props: {
   item: TodoItem;
@@ -19,12 +22,12 @@ export default function TodoItemUI(props: {
   const navigation = useNavigation<NativeStackNavigationProp<any>>();
 
   const handleDelete = async () => {
-    dispatch(removeItemAPI(listId, item.id));
+    await dispatch(removeItemOfflineAPI(listId, item.id));
   };
 
   const handleCheck = async (check: boolean) => {
-    dispatch(
-      editItemAPI(listId, item.id, {
+    await dispatch(
+      editItemOfflineAPI(listId, item.id, {
         description: undefined,
         is_done: check,
       }),

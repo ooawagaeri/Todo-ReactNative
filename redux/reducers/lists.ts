@@ -52,7 +52,7 @@ function retrieveList(data: TodoList[], listId: number | undefined) {
 
 function addItemState(data: TodoList[], item: TodoItem): TodoList[] {
   const targetList = retrieveList(data, item.todo_list_id);
-  targetList.todos = [item, ...targetList.todos];
+  targetList.todos = [...targetList.todos, item];
   return editListState(data, targetList);
 }
 

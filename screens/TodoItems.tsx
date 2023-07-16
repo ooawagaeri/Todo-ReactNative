@@ -7,18 +7,19 @@ import Empty from '../components/Empty';
 import Header from '../components/Header';
 import {useIsFocused} from '@react-navigation/native';
 import {useAppDispatch, useAppSelector} from '../redux/hooks';
-import {displayListByIdAPI} from '../redux/thunks/listsThunks';
+import {displayListByIdOfflineAPI} from '../redux/network/listsOffline';
 
 export default function TodoItems(props: {navigation: any; route: any}) {
   let {navigation, route} = props;
   let listId: number = route.params.id;
   const dispatch = useAppDispatch();
   const lists = useAppSelector(state => state.lists.lists);
+  const items = lists.filter(list => list.id === listId)[0].todos;
 
   const isFocused = useIsFocused();
   useEffect(() => {
     if (isFocused) {
-      dispatch(displayListByIdAPI(listId));
+      dispatch(displayListByIdOfflineAPI(listId));
     }
   }, [dispatch, isFocused, listId]);
 
@@ -32,7 +33,7 @@ export default function TodoItems(props: {navigation: any; route: any}) {
     <ComponentContainer>
       <View>
         <FlatList
-          data={lists.filter(list => list.id === listId)[0].todos}
+          data={items}
           ListHeaderComponent={<Header text={'Tasks'} />}
           ListEmptyComponent={<Empty text={'To-Do Item'} />}
           keyExtractor={item => item.id.toString()}
