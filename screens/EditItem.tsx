@@ -2,23 +2,27 @@ import React, {useLayoutEffect, useState} from 'react';
 import {SafeAreaView, TextInput, TouchableOpacity, View} from 'react-native';
 import styled from 'styled-components';
 import AntDesign from 'react-native-vector-icons/AntDesign';
-import {putTodoItemById} from '../utils/api';
+import {useAppDispatch} from '../redux/hooks';
+import {editItemOfflineAPI} from '../redux/network/itemsOffline';
 
 export default function EditItem(props: {navigation: any; route: any}) {
   let {navigation, route} = props;
-  const [desc, setDesc] = useState(route.params.description);
+  const dispatch = useAppDispatch();
+  const [desc, setDesc] = useState<string>(route.params.description);
 
   const handleSubmit = async () => {
     if (desc !== '') {
-      const res = await putTodoItemById(route.params.id, {
-        description: desc,
-        is_done: undefined,
-      });
-      console.log(res);
+      await dispatch(
+        editItemOfflineAPI(route.params.listId, route.params.id, {
+          description: desc,
+          is_done: undefined,
+        }),
+      );
+      setDesc('');
       navigation.navigate('TodoItems', {
-        id: route.params.list_id,
-        name: route.params.list_name,
-      }); // Return to list of TodoItems
+        id: route.params.listId,
+        name: route.params.listName,
+      });
     }
   };
 
@@ -37,8 +41,8 @@ export default function EditItem(props: {navigation: any; route: any}) {
       <InnerContainer>
         <InputContainer>
           <Input
-            placeholder="New Description..."
             value={desc}
+            placeholder="New Description..."
             onChangeText={onChangeText}
           />
         </InputContainer>

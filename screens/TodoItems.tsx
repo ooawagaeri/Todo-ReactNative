@@ -1,51 +1,39 @@
-import React, {useEffect, useLayoutEffect, useState} from 'react';
+import React, {useEffect, useLayoutEffect} from 'react';
 import {FlatList, SafeAreaView, View} from 'react-native';
-import {getTodoListById} from '../utils/api';
-import {TodoItem} from '../types/types';
 import styled from 'styled-components';
 import AddItem from '../components/AddItem';
 import TodoItemUI from '../components/TodoItemUI';
 import Empty from '../components/Empty';
 import Header from '../components/Header';
 import {useIsFocused} from '@react-navigation/native';
+import {useAppDispatch, useAppSelector} from '../redux/hooks';
+import {displayListByIdOfflineAPI} from '../redux/network/listsOffline';
 
 export default function TodoItems(props: {navigation: any; route: any}) {
   let {navigation, route} = props;
-  const [todoItemList, setTodoItemList] = useState<TodoItem[]>([]);
+  let listId: number = route.params.id;
+  const dispatch = useAppDispatch();
+  const lists = useAppSelector(state => state.lists.lists);
+  const items = lists.filter(list => list.id === listId)[0].todos;
 
   const isFocused = useIsFocused();
   useEffect(() => {
     if (isFocused) {
-      getTodoListById(route.params.id).then(res => {
-        if (typeof res === 'string') {
-          console.error(res);
-        } else {
-          setTodoItemList(res.todos);
-        }
-      });
+      dispatch(displayListByIdOfflineAPI(listId));
     }
-  }, [isFocused, route.params.id]);
-
-  const updateData = async () => {
-    const resGet = await getTodoListById(route.params.id);
-    if (typeof resGet === 'string') {
-      console.error(resGet);
-    } else {
-      setTodoItemList(resGet.todos);
-    }
-  };
+  }, [dispatch, isFocused, listId]);
 
   useLayoutEffect(() => {
     navigation.setOptions({
       title: 'List: ' + route.params.name,
     });
-  }, [navigation, route.params.id, route.params.name]);
+  }, [navigation, route.params.name]);
 
   return (
     <ComponentContainer>
       <View>
         <FlatList
-          data={todoItemList}
+          data={items}
           ListHeaderComponent={<Header text={'Tasks'} />}
           ListEmptyComponent={<Empty text={'To-Do Item'} />}
           keyExtractor={item => item.id.toString()}
@@ -53,12 +41,12 @@ export default function TodoItems(props: {navigation: any; route: any}) {
             <TodoItemUI
               item={item}
               listName={route.params.name}
-              handleRefresh={() => updateData()}
+              listId={listId}
             />
           )}
         />
         <View>
-          <AddItem id={route.params.id} handleRefresh={updateData} />
+          <AddItem id={listId} />
         </View>
       </View>
     </ComponentContainer>

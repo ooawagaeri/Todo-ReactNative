@@ -2,37 +2,34 @@ import React, {useState} from 'react';
 import {TextInput, TouchableOpacity, View} from 'react-native';
 import styled from 'styled-components';
 import AntDesign from 'react-native-vector-icons/AntDesign';
-import {postTodoList} from '../utils/api';
+import {useAppDispatch} from '../redux/hooks';
+import {addListOfflineAPI} from '../redux/network/listsOffline';
 
-export default function AddList(props: {handleRefresh: () => void}) {
-  let {handleRefresh} = props;
-  const [value, setValue] = useState('');
+export default function AddList() {
+  const dispatch = useAppDispatch();
+  const [name, setName] = useState('');
 
   const onChangeText = (text: React.SetStateAction<string>) => {
-    setValue(text);
+    setName(text);
   };
 
   const handleAdd = async () => {
-    if (value !== '') {
-      const res = await postTodoList({name: value});
-      if (typeof res === 'string') {
-        console.error(res);
-      } else {
-        await handleRefresh();
-      }
+    if (name !== '') {
+      await dispatch(addListOfflineAPI(name));
     }
+    setName('');
   };
 
   return (
     <ComponentContainer>
       <InputContainer>
-        <Input placeholder="Add List..." onChangeText={onChangeText} />
+        <Input
+          value={name}
+          placeholder="Add List..."
+          onChangeText={onChangeText}
+        />
       </InputContainer>
-      <SubmitButton
-        onPress={() => {
-          setValue('');
-          handleAdd();
-        }}>
+      <SubmitButton onPress={() => handleAdd()}>
         <AntDesign name="plus" size={24} color="#282a36" />
       </SubmitButton>
     </ComponentContainer>

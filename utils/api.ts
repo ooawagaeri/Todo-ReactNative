@@ -65,7 +65,7 @@ export async function getTodoItemById(id: number): Promise<TodoItem | string> {
 
 export async function postTodoItem(todoItem: {
   description: string;
-  todo_list_id: any;
+  todo_list_id: number;
 }): Promise<TodoItem | string> {
   const rawRes = await axios.post(base_url + '/todos', todoItem);
   const res = rawRes.data as MessagePayload;
@@ -88,4 +88,15 @@ export async function deleteTodoItemById(id: number): Promise<string> {
   const rawRes = await axios.delete(base_url + '/todos/' + id);
   const res = rawRes.data as MessagePayload;
   return res.msg;
+}
+
+export async function putSyncData(
+  allLists: TodoList[],
+): Promise<TodoList[] | string> {
+  const payload = {
+    data: allLists,
+  };
+  const rawRes = await axios.put(base_url + '/sync', payload);
+  const res = rawRes.data as MessagePayload;
+  return res.data ? (res.data as TodoList[]) : (res.msg as string);
 }

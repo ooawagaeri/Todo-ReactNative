@@ -2,18 +2,17 @@ import React, {useLayoutEffect, useState} from 'react';
 import {SafeAreaView, TextInput, TouchableOpacity, View} from 'react-native';
 import styled from 'styled-components';
 import AntDesign from 'react-native-vector-icons/AntDesign';
-import {putTodoListById} from '../utils/api';
+import {useAppDispatch} from '../redux/hooks';
+import {editListOfflineAPI} from '../redux/network/listsOffline';
 
 export default function EditList(props: {navigation: any; route: any}) {
   let {navigation, route} = props;
+  const dispatch = useAppDispatch();
   const [name, setName] = useState<string>(route.params.name);
 
   const handleSubmit = async () => {
     if (name !== '') {
-      const res = await putTodoListById(route.params.id, {
-        name,
-      });
-      console.log(res);
+      dispatch(editListOfflineAPI(route.params.id, name));
       navigation.navigate('TodoLists'); // Return to list of TodoLists
     }
   };
@@ -33,8 +32,8 @@ export default function EditList(props: {navigation: any; route: any}) {
       <InnerContainer>
         <InputContainer>
           <Input
-            placeholder="New Name..."
             value={name}
+            placeholder="New Name..."
             onChangeText={onChangeText}
           />
         </InputContainer>

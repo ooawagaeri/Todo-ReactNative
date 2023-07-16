@@ -2,41 +2,44 @@ import React from 'react';
 import {TouchableOpacity, View} from 'react-native';
 import styled from 'styled-components';
 import AntDesign from 'react-native-vector-icons/AntDesign';
-import {deleteTodoItemById, putTodoItemById} from '../utils/api';
 import {TodoItem} from '../types/types';
 import BouncyCheckbox from 'react-native-bouncy-checkbox';
 import {useNavigation} from '@react-navigation/native';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
+import {useAppDispatch} from '../redux/hooks';
+import {
+  editItemOfflineAPI,
+  removeItemOfflineAPI,
+} from '../redux/network/itemsOffline';
 
 export default function TodoItemUI(props: {
   item: TodoItem;
   listName: string;
-  handleRefresh: () => void;
+  listId: number;
 }) {
-  let {item, listName, handleRefresh} = props;
+  let {item, listName, listId} = props;
+  const dispatch = useAppDispatch();
   const navigation = useNavigation<NativeStackNavigationProp<any>>();
 
   const handleDelete = async () => {
-    const res = await deleteTodoItemById(item.id);
-    console.log(res);
-    await handleRefresh();
+    await dispatch(removeItemOfflineAPI(listId, item.id));
   };
 
   const handleCheck = async (check: boolean) => {
-    const res = await putTodoItemById(item.id, {
-      description: undefined,
-      is_done: check,
-    });
-    console.log(res);
-    await handleRefresh();
+    await dispatch(
+      editItemOfflineAPI(listId, item.id, {
+        description: undefined,
+        is_done: check,
+      }),
+    );
   };
 
   const navigateToItemEdit = () =>
     navigation.navigate('TodoItemEdit', {
       id: item.id,
       description: item.description,
-      list_id: item.todo_list_id,
-      list_name: listName,
+      listId: item.todo_list_id,
+      listName: listName,
     });
 
   return (
