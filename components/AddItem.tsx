@@ -16,19 +16,23 @@ export default function AddItem(props: {id: number}) {
 
   const handleAdd = async () => {
     if (desc !== '') {
-      setDesc('');
       const newTodo = {
         todo_list_id: id,
         description: desc,
       };
       await dispatch(addItemOfflineAPI(newTodo));
     }
+    setDesc('');
   };
 
   return (
     <ComponentContainer>
       <InputContainer>
-        <Input placeholder="Add Item..." onChangeText={onChangeText} />
+        <Input
+          value={desc}
+          placeholder="Add Item..."
+          onChangeText={onChangeText}
+        />
       </InputContainer>
       <SubmitButton onPress={() => handleAdd()}>
         <AntDesign name="plus" size={24} color="#282a36" />

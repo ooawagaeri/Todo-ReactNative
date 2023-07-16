@@ -17,18 +17,19 @@ export default function AddList() {
     if (name !== '') {
       await dispatch(addListOfflineAPI(name));
     }
+    setName('');
   };
 
   return (
     <ComponentContainer>
       <InputContainer>
-        <Input placeholder="Add List..." onChangeText={onChangeText} />
+        <Input
+          value={name}
+          placeholder="Add List..."
+          onChangeText={onChangeText}
+        />
       </InputContainer>
-      <SubmitButton
-        onPress={() => {
-          setName('');
-          handleAdd();
-        }}>
+      <SubmitButton onPress={() => handleAdd()}>
         <AntDesign name="plus" size={24} color="#282a36" />
       </SubmitButton>
     </ComponentContainer>
